@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         fillData();
         carImage = (ImageView) findViewById(R.id.carImage);
         carListSpinner = (Spinner) findViewById(R.id.carListSpinner);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, availableCarList);
         availableCarList = getAvailableCarList();
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, availableCarList);
         carListSpinner.setAdapter(adapter);
 
         carListSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -57,6 +59,6 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Car> getAvailableCarList () {
         return (ArrayList<Car>) carArrayList.stream().filter(car -> {
             return car.getStatus();
-        });
+        }).collect(Collectors.toList());
     }
 }
