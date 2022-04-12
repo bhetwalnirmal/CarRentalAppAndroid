@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Spinner carListSpinner;
     ImageView carImage;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TextView total;
     Car selectedCar = null;
     EditText etNumberOfDays;
+    CheckBox cbNavigator, cbChildSeat, cbUnlimited;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         rbLessThan21 = (RadioButton) findViewById(R.id.rbLessThan21);
         rbMiddle = (RadioButton) findViewById(R.id.rbMiddle);
         rb65 = (RadioButton) findViewById(R.id.rbSenior);
+
+        cbNavigator = (CheckBox) findViewById(R.id.navigator);
+        cbChildSeat = (CheckBox) findViewById(R.id.childSeat);
+        cbUnlimited = (CheckBox) findViewById(R.id.unlimited);
 
         total = (TextView) findViewById(R.id.total);
         etNumberOfDays = (EditText) findViewById(R.id.numberOfDays);
@@ -100,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        cbUnlimited.setOnClickListener(this);
+        cbChildSeat.setOnClickListener(this);
+        cbNavigator.setOnClickListener(this);
     }
 
     public void fillData () {
@@ -124,27 +134,50 @@ public class MainActivity extends AppCompatActivity {
             int numberOfDays = 0;
             try {
                 numberOfDays = Integer.parseInt(etNumberOfDays.getText().toString());
+
+                if (cbNavigator.isChecked()) {
+                    grandTotal += numberOfDays * 7;
+                }
+
+                if (cbChildSeat.isChecked()) {
+                    grandTotal += numberOfDays * 5;
+                }
+
+                if (cbUnlimited.isChecked()) {
+                    grandTotal += numberOfDays * 15;
+                }
             } catch (Exception exception) {
                 numberOfDays = 0;
             }
             grandTotal += selectedCar.getDailyRate() * numberOfDays;
         }
         
-        switch(selectedId) {
-            case R.id.rbLessThan21:
-                grandTotal += 15;
-                break;
-            case R.id.rbMiddle:
-                grandTotal += 7;
-                break;
-            case R.id.rbSenior:
-                grandTotal += 10;
-                break;
+        try {
+            int numberOfDays = Integer.parseInt(etNumberOfDays.getText().toString());
 
-            default:
-                break;
+            switch(selectedId) {
+                case R.id.rbLessThan21:
+                    grandTotal += numberOfDays * 15;
+                    break;
+                case R.id.rbMiddle:
+                    grandTotal += numberOfDays * 7;
+                    break;
+                case R.id.rbSenior:
+                    grandTotal += numberOfDays * 10;
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+
         }
 
         total.setText(String.format("$ %.2f", grandTotal));
+    }
+
+    @Override
+    public void onClick(View view) {
+        updateTotal();
     }
 }
