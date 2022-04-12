@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         carArrayList.add(new Car("Honda", 25, true, R.drawable.honda));
         carArrayList.add(new Car("Ford", 30, true, R.drawable.ford));
         carArrayList.add(new Car("Lamborgini", 50.25,true, R.drawable.lamborgini));
-        carArrayList.add(new Car("Nissan", 40.50, true, R.drawable.nissan));
+        carArrayList.add(new Car("Nissan", 40.50, false, R.drawable.nissan));
     }
 
     public ArrayList<Car> getAvailableCarList () {

@@ -97,6 +97,26 @@
             android:text="Additional Options"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup"/>
 
+        <CheckBox
+            android:id="@+id/navigator"
+            android:text="Navigator"
+            app:layout_constraintTop_toBottomOf="@id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/childSeat"
+            android:text="Child Seat"
+            app:layout_constraintTop_toBottomOf="@id/navigator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <CheckBox
+            android:id="@+id/unlimited"
+            android:text="Unlimited"
+            app:layout_constraintTop_toBottomOf="@id/childSeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
