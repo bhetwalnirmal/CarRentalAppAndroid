@@ -4,11 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.Image;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +26,24 @@ public class MainActivity extends AppCompatActivity {
     ImageView carImage;
     ArrayList<Car> carArrayList = new ArrayList<>();
     ArrayList<Car> availableCarList = new ArrayList<>();
-
+    RadioGroup radioGroup;
+    RadioButton rbLessThan21, rbMiddle, rb65;
+    TextView total;
+    Car selectedCar = null;
+    EditText etNumberOfDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fillData();
+        rbLessThan21 = (RadioButton) findViewById(R.id.rbLessThan21);
+        rbMiddle = (RadioButton) findViewById(R.id.rbMiddle);
+        rb65 = (RadioButton) findViewById(R.id.rbSenior);
+
+        total = (TextView) findViewById(R.id.total);
+        etNumberOfDays = (EditText) findViewById(R.id.numberOfDays);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         carImage = (ImageView) findViewById(R.id.carImage);
         carListSpinner = (Spinner) findViewById(R.id.carListSpinner);
         availableCarList = getAvailableCarList();
@@ -37,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Car car = carArrayList.get(i);
+                selectedCar = car;
                 carImage.setImageResource(car.getImage());
+                updateTotal();
             }
 
             @Override
@@ -46,6 +65,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rbLessThan21:
+                        updateTotal();
+                        break;
+                    case R.id.rbMiddle:
+                        updateTotal();
+                        break;
+                    case R.id.rbSenior:
+                        updateTotal();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        etNumberOfDays.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                updateTotal();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     public void fillData () {
@@ -60,5 +114,37 @@ public class MainActivity extends AppCompatActivity {
         return (ArrayList<Car>) carArrayList.stream().filter(car -> {
             return car.getStatus();
         }).collect(Collectors.toList());
+    }
+
+    public void updateTotal () {
+        double grandTotal = 0;
+        int selectedId = radioGroup.getCheckedRadioButtonId();
+
+        if (selectedCar != null) {
+            int numberOfDays = 0;
+            try {
+                numberOfDays = Integer.parseInt(etNumberOfDays.getText().toString());
+            } catch (Exception exception) {
+                numberOfDays = 0;
+            }
+            grandTotal += selectedCar.getDailyRate() * numberOfDays;
+        }
+        
+        switch(selectedId) {
+            case R.id.rbLessThan21:
+                grandTotal += 15;
+                break;
+            case R.id.rbMiddle:
+                grandTotal += 7;
+                break;
+            case R.id.rbSenior:
+                grandTotal += 10;
+                break;
+
+            default:
+                break;
+        }
+
+        total.setText(String.format("$ %.2f", grandTotal));
     }
 }
