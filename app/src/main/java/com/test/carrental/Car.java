@@ -6,11 +6,13 @@ public class Car implements Serializable {
     private String name;
     private double dailyRate;
     private boolean status;
+    private int image;
 
-    public Car(String name, double dailyRate, boolean status) {
+    public Car(String name, double dailyRate, boolean status, int image) {
         this.name = name;
         this.dailyRate = dailyRate;
         this.status = status;
+        this.image = image;
     }
 
     public String getName() {
@@ -35,6 +37,18 @@ public class Car implements Serializable {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
     }
 
     @Override
